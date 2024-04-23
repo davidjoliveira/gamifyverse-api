@@ -1,0 +1,18 @@
+spring:
+   environment-type: test
+   application:
+      name: Gamify-API
+   jpa:
+      properties:
+         hibernate:
+            default_schema: gamifyverse
+   datasource:
+      driver-class-name: org.h2.Driver
+      url: jdbc:h2:mem:db;DB_CLOSE_DELAY=-1;INIT=CREATE SCHEMA IF NOT EXISTS GAMIFYVERSE;
+      username: sa
+      password: sa
+      
+hibernate:
+   dialect: org.hibernate.dialect.H2Dialect
+   hbm2ddl:
+      auto: create
