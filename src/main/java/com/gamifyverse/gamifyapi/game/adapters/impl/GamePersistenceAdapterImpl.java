@@ -1,6 +1,8 @@
 package com.gamifyverse.gamifyapi.game.adapters.impl;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,6 +49,12 @@ public class GamePersistenceAdapterImpl implements GamePersistenceAdapter {
 	@Override
 	public List<Game> getGames() {
 		return gameMapper.fromListEntity(gameRepository.findAll());
+	}
+
+	@Override
+	public Game getGameByExternalUUID(String gameUUID) {
+		Optional<GameEntity> res = gameRepository.findByExternalUUID(UUID.fromString(gameUUID));
+		return res.map(gameMapper::fromEntity).orElse(null);
 	}
 
 }

@@ -16,8 +16,8 @@ import lombok.Data;
 @Data
 public class GameAPIConfigurationEntity {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO, generator = "gamifyverse.game_api_configurations_id_seq")
-	@SequenceGenerator(schema = "gamifyverse", name = "game_api_configurations_id_seq", allocationSize = 1, initialValue = 1, sequenceName = "game_api_configurations_id_seq")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "gamifyverse.game_api_configurations_id_seq")
+//	@SequenceGenerator(schema = "gamifyverse", name = "game_api_configurations_id_seq", allocationSize = 1, initialValue = 1, sequenceName = "game_api_configurations_id_seq")
 	private Long id;
 
 	@JoinColumn(name = "game_id")

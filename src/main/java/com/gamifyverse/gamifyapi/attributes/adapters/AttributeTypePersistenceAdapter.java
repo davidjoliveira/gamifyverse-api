@@ -7,5 +7,5 @@ import com.gamifyverse.gamifyapi.attributes.model.AttributeType;
 public interface AttributeTypePersistenceAdapter {
 
 	public List<AttributeType> getAllAttributeTypes();
-	
+
 }

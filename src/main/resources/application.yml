@@ -14,3 +14,6 @@ spring:
    environment-type: local
    application:
       name: Gamify-API
+logging:
+   level:
+      root: INFO

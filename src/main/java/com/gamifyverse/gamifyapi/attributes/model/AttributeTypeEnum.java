@@ -1,5 +1,7 @@
 package com.gamifyverse.gamifyapi.attributes.model;
 
+import java.util.Arrays;
+
 import lombok.Getter;
 
 @Getter
@@ -13,4 +15,10 @@ public enum AttributeTypeEnum {
 		this.code = code;
 		this.name = name;
 	}
+
+	public static AttributeTypeEnum fromCode(Integer code) {
+		return Arrays.asList(values()).stream().filter(a -> a.getCode() == code).findFirst()
+				.orElseThrow(() -> new RuntimeException("Atributo não encontrado para o código"));
+	}
+
 }

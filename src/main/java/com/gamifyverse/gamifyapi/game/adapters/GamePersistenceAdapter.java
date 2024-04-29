@@ -6,11 +6,13 @@ import com.gamifyverse.gamifyapi.game.model.Game;
 import com.gamifyverse.gamifyapi.game.model.GameAPIConfiguration;
 
 public interface GamePersistenceAdapter {
-	
+
 	public Game upsertGame(Game game);
-	
+
 	public List<Game> getGames();
-	
+
+	public Game getGameByExternalUUID(String gameUUID);
+
 	public GameAPIConfiguration upsertGameAPIConfiguration(GameAPIConfiguration apiConfiguration);
-	
+
 }
