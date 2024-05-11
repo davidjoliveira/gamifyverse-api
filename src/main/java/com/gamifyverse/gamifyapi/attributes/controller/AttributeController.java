@@ -17,11 +17,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gamifyverse.gamifyapi.attributes.controller.dto.AttributeDto;
 import com.gamifyverse.gamifyapi.attributes.controller.dto.AttributeTypeDto;
+import com.gamifyverse.gamifyapi.attributes.controller.dto.CreateAttributeDto;
 import com.gamifyverse.gamifyapi.attributes.controller.mappers.AttributeDtoMapper;
 import com.gamifyverse.gamifyapi.attributes.model.Attribute;
 import com.gamifyverse.gamifyapi.attributes.model.AttributeType;
+import com.gamifyverse.gamifyapi.attributes.usecases.CreateAttributeUseCase;
 import com.gamifyverse.gamifyapi.attributes.usecases.GetAttributeTypesUseCase;
 import com.gamifyverse.gamifyapi.attributes.usecases.GetAttributesUseCase;
+import com.gamifyverse.gamifyapi.attributes.usecases.command.CreateAttributeCommand;
 import com.gamifyverse.gamifyapi.attributes.usecases.command.GetAttributeTypesCommand;
 import com.gamifyverse.gamifyapi.attributes.usecases.command.GetAttributesByGameUUIDCommand;
 
@@ -43,11 +46,16 @@ public class AttributeController {
 	private GetAttributesUseCase getAttributes;
 
 	@Autowired
+	private CreateAttributeUseCase createAttribute;
+
+	@Autowired
 	private AttributeDtoMapper attributeMapper;
 
 	@PostMapping(path = "", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> createAttribute(@Valid @RequestBody Object body) {
-		return null;
+	public ResponseEntity<AttributeDto> createAttribute(@Valid @RequestBody CreateAttributeDto body) {
+		log.info(String.format("Creating attribute for game %s", body.getGameUUID()));
+		Attribute attribute = createAttribute.handle(CreateAttributeCommand.from(body));
+		return new ResponseEntity<AttributeDto>(attributeMapper.tODto(attribute), HttpStatus.CREATED);
 	}
 
 	@GetMapping(path = "/game/{gameUUID}", produces = MediaType.APPLICATION_JSON_VALUE)

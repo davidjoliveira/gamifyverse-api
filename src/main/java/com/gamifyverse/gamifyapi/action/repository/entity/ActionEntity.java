@@ -1,8 +1,9 @@
-package com.gamifyverse.gamifyapi.attributes.repository.entity;
+package com.gamifyverse.gamifyapi.action.repository.entity;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.gamifyverse.gamifyapi.attributes.repository.entity.AttributeEntity;
 import com.gamifyverse.gamifyapi.game.repository.entity.GameEntity;
 
 import jakarta.persistence.Column;
@@ -15,12 +16,12 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
-@Entity(name = "Attribute")
-@Table(name = "attribute", schema = "gamifyverse")
+@Entity(name = "Action")
+@Table(name = "action", schema = "gamifyverse")
 @Data
-public class AttributeEntity {
+public class ActionEntity {
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "gamifyverse.attribute_id_seq")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "gamifyverse.action_id_seq")
 	private Long id;
 
 	@Column
@@ -32,18 +33,26 @@ public class AttributeEntity {
 	@Column(name = "external_uuid")
 	private UUID externalUUID;
 
-	@JoinColumn(name = "attribute_type_id")
 	@ManyToOne
-	private AttributeTypeEntity attributeType;
+	@JoinColumn(name = "game_id")
+	private GameEntity game;
 
-	@Column
-	private Boolean active;
+	@JoinColumn(name = "attribute_id")
+	@ManyToOne
+	private AttributeEntity attribute;
+
+	@JoinColumn(name = "action_type_id")
+	@ManyToOne
+	private ActionTypeEntity actionType;
+
+	@JoinColumn(name = "schedule_type_id")
+	@ManyToOne
+	private ScheduleTypeEntity scheduleType;
 
 	@Column(name = "creation_date")
 	private LocalDateTime creationDate;
 
-	@ManyToOne
-	@JoinColumn(name = "game_id")
-	private GameEntity game;
+	@Column
+	private Boolean active;
 
 }

@@ -21,7 +21,8 @@ public class GetGamesUseCase {
 	}
 
 	public Game handle(GetGameCommand command) {
-		return gamePersistence.getGameByExternalUUID(command.getGameUUID());
+		return gamePersistence.getGameByExternalUUID(command.getGameUUID()).orElseThrow(
+				() -> new RuntimeException(String.format("Game not found for UUID %s", command.getGameUUID())));
 	}
 
 }

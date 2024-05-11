@@ -1,6 +1,7 @@
 package com.gamifyverse.gamifyapi.game.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,8 @@ import com.gamifyverse.gamifyapi.game.usecases.commands.GetGamesCommand;
 import com.gamifyverse.gamifyapi.game.usecases.commands.SaveGameCommand;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.extern.apachecommons.CommonsLog;
 
 @RequestMapping(path = "/game")
@@ -62,9 +65,9 @@ public class GameController {
 	}
 
 	@GetMapping(path = "/{gameUUID}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<GameDto> getGame(@PathVariable("gameUUID") String gameUUID) {
+	public ResponseEntity<GameDto> getGame(@PathVariable("gameUUID") @NotNull @NotEmpty @Valid String gameUUID) {
 		log.info(String.format("Received get game by uuid for %s", gameUUID));
-		Game response = getGames.handle(new GetGameCommand(gameUUID));
+		Game response = getGames.handle(new GetGameCommand(UUID.fromString(gameUUID)));
 
 		return new ResponseEntity<GameDto>(gameDtoMapper.toDto(response), HttpStatus.OK);
 	}

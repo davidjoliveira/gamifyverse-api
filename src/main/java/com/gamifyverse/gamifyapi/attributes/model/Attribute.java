@@ -15,6 +15,11 @@ public class Attribute {
 	private String name;
 	private String description;
 	private UUID externalUUID;
-	private AttributeTypeEnum attributeTypeId;
+	private AttributeType attributeType;
 	private Boolean active;
+
+	public static Attribute createAttribute(String name, String description, AttributeType attributeType, Game game) {
+		return new Attribute(null, game, name, description, UUID.randomUUID(), attributeType, true);
+	}
+
 }

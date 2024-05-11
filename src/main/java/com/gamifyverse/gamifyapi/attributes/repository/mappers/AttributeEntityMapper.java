@@ -19,6 +19,8 @@ public interface AttributeEntityMapper {
 
 	public Attribute toDomain(AttributeEntity entity);
 
+	public AttributeEntity toEntity(Attribute domain);
+
 	public List<Attribute> toAttributeList(List<AttributeEntity> entitites);
 
 	public static Integer map(AttributeTypeEnum enumm) {

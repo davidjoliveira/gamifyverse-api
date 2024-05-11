@@ -1,6 +1,7 @@
 package com.gamifyverse.gamifyapi.attributes.repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,5 +15,7 @@ public interface AttributeRepository extends JpaRepository<AttributeEntity, Long
 
 	@Query(name = "select a from Attribute a JOIN a.game g WHERE g.externalUUID = ?0 AND a.active = ?1")
 	public List<AttributeEntity> getByGameExternalUUIDAndActive(UUID gameUUID, Boolean active);
+
+	public Optional<AttributeEntity> findByExternalUUID(UUID externalUUID);
 
 }

@@ -52,9 +52,9 @@ public class GamePersistenceAdapterImpl implements GamePersistenceAdapter {
 	}
 
 	@Override
-	public Game getGameByExternalUUID(String gameUUID) {
-		Optional<GameEntity> res = gameRepository.findByExternalUUID(UUID.fromString(gameUUID));
-		return res.map(gameMapper::fromEntity).orElse(null);
+	public Optional<Game> getGameByExternalUUID(UUID gameUUID) {
+		Optional<GameEntity> res = gameRepository.findByExternalUUID(gameUUID);
+		return res.map(gameMapper::fromEntity);
 	}
 
 }
