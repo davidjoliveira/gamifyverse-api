@@ -71,4 +71,10 @@ public class ActionPersistenceAdapterImpl
 		return actionMapper.toActionDomainList(entities);
 	}
 
+	@Override
+	public Optional<Action> getActionByUUID(UUID actionUUID) {
+		Optional<ActionEntity> optEntity = actionRepository.findByExternalUUID(actionUUID);
+		return optEntity.map(actionMapper::toDomain);
+	}
+
 }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.gamifyverse.gamifyapi.action.adapters.ActionPersistenceAdapter;
 import com.gamifyverse.gamifyapi.action.adapters.ActionTypePersistenceAdapter;
 import com.gamifyverse.gamifyapi.action.adapters.ScheduleTypePersistenceAdapter;
 import com.gamifyverse.gamifyapi.action.model.Action;
@@ -17,8 +18,8 @@ import com.gamifyverse.gamifyapi.action.model.ScheduleType;
 import com.gamifyverse.gamifyapi.action.usecases.command.CreateActionCommand;
 import com.gamifyverse.gamifyapi.attributes.adapters.AttributePersistenceAdapter;
 import com.gamifyverse.gamifyapi.attributes.model.Attribute;
-import com.gamifyverse.gamifyapi.game.adapters.GamePersistenceAdapter;
 import com.gamifyverse.gamifyapi.game.model.Game;
+import com.gamifyverse.gamifyapi.game.service.GameService;
 
 @Service
 public class ActionService {
@@ -33,7 +34,10 @@ public class ActionService {
 	private ScheduleTypePersistenceAdapter scheduleTypePersistenceAdapter;
 
 	@Autowired
-	private GamePersistenceAdapter gamePersistenceAdapter;
+	private ActionPersistenceAdapter actionAdapter;
+
+	@Autowired
+	private GameService gameService;
 
 	@Async
 	private CompletableFuture<Attribute> findAttribute(UUID attributeUUID) {
@@ -48,12 +52,6 @@ public class ActionService {
 	}
 
 	@Async
-	public CompletableFuture<Game> findGame(UUID gameUUID) {
-		Optional<Game> game = gamePersistenceAdapter.getGameByExternalUUID(gameUUID);
-		return CompletableFuture.<Game>completedFuture(game.orElse(null));
-	}
-
-	@Async
 	private CompletableFuture<ScheduleType> findScheduleType(UUID scheduleTypeUUID) {
 		if (scheduleTypeUUID == null)
 			return CompletableFuture.<ScheduleType>completedFuture(null);
@@ -63,10 +61,16 @@ public class ActionService {
 		return CompletableFuture.<ScheduleType>completedFuture(optScheduleType.orElse(null));
 	}
 
+	@Async
+	public CompletableFuture<Action> findAction(UUID actionUUID) {
+		Optional<Action> optAction = actionAdapter.getActionByUUID(actionUUID);
+		return CompletableFuture.<Action>completedFuture(optAction.orElse(null));
+	}
+
 	public Action createActionModel(CreateActionCommand command) {
 		CompletableFuture<Attribute> attributeFuture = findAttribute(command.getAttributeUUID());
 		CompletableFuture<ActionType> actionTypeFuture = findActionType(command.getActionTypeUUID());
-		CompletableFuture<Game> gameFuture = findGame(command.getGameUUID());
+		CompletableFuture<Game> gameFuture = gameService.findGame(command.getGameUUID());
 		CompletableFuture<ScheduleType> scheduleTypeFuture = findScheduleType(command.getScheduleTypeUUID());
 		try {
 			return CompletableFuture.allOf(attributeFuture, actionTypeFuture, gameFuture, scheduleTypeFuture)
