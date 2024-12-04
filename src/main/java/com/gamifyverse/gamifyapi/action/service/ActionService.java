@@ -68,17 +68,14 @@ public class ActionService {
 	}
 
 	public Action createActionModel(CreateActionCommand command) {
-		CompletableFuture<Attribute> attributeFuture = findAttribute(command.getAttributeUUID());
 		CompletableFuture<ActionType> actionTypeFuture = findActionType(command.getActionTypeUUID());
 		CompletableFuture<Game> gameFuture = gameService.findGame(command.getGameUUID());
 		CompletableFuture<ScheduleType> scheduleTypeFuture = findScheduleType(command.getScheduleTypeUUID());
 		try {
-			return CompletableFuture.allOf(attributeFuture, actionTypeFuture, gameFuture, scheduleTypeFuture)
-					.thenApply(v -> {
-						return Action.createNewAction(command.getName(), command.getDescription(),
-								actionTypeFuture.join(), scheduleTypeFuture.join(), command.getSchedule(),
-								attributeFuture.join(), gameFuture.join());
-					}).get();
+			return CompletableFuture.allOf(actionTypeFuture, gameFuture, scheduleTypeFuture).thenApply(v -> {
+				return Action.createNewAction(command.getName(), command.getDescription(), actionTypeFuture.join(),
+						scheduleTypeFuture.join(), command.getSchedule(), gameFuture.join());
+			}).get();
 		} catch (InterruptedException | ExecutionException e) {
 			throw new RuntimeException(
 					String.format("It was not possible to create a proper action due to error %s", e.getMessage()), e);

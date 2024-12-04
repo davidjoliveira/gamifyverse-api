@@ -16,8 +16,8 @@ public class CreateActionDto {
 	private String name;
 	private String description;
 
-	@NotNull
-	private UUID attributeUUID;
+//	@NotNull
+//	private UUID attributeUUID;
 	@NotNull
 	private UUID actionTypeUUID;
 

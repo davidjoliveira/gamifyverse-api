@@ -14,6 +14,7 @@ public class TriggerDto {
 	private UUID gameUUID;
 	private UUID triggerTypeUUID;
 	private UUID triggerEffectTypeUUID;
+	private UUID attributeUUID;
 	private UUID actionUUID;
 	private LocalDateTime creationDate;
 	private Boolean active;

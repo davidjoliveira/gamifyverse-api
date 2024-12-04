@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum TriggerEffectTypeEnum {
-	PRIZE(1l, "PREMIO"), CHALLENGE(1l, "DESAFIO"), ATTRIBUTECHANGE(1l, "INCREMENTO ATRIBUTO"),;
+	PRIZE(1l, "PREMIO"), CHALLENGE(2l, "DESAFIO"), ATTRIBUTECHANGE(3l, "INCREMENTO ATRIBUTO"),;
 
 	private Long id;
 	private String name;

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.gamifyverse.gamifyapi.action.model.Action;
 import com.gamifyverse.gamifyapi.action.service.ActionService;
+import com.gamifyverse.gamifyapi.attributes.adapters.AttributePersistenceAdapter;
 import com.gamifyverse.gamifyapi.attributes.model.Attribute;
 import com.gamifyverse.gamifyapi.attributes.service.AttributeService;
 import com.gamifyverse.gamifyapi.game.model.Game;
@@ -40,6 +41,15 @@ public class TriggerService {
 	@Autowired
 	private TriggerTypeValuesPersistenceAdapter triggerTypeValuesPersistenceAdapter;
 
+	@Autowired
+	private AttributePersistenceAdapter attributePersistenceAdapter;
+
+	@Async
+	private CompletableFuture<Attribute> findAttribute(UUID attributeUUID) {
+		Optional<Attribute> optAttribute = attributePersistenceAdapter.getAttributeByExternalUUID(attributeUUID);
+		return CompletableFuture.<Attribute>completedFuture(optAttribute.orElse(null));
+	}
+
 	@Async
 	public CompletableFuture<TriggerType> findTriggerType(UUID actionUUID) {
 		Optional<TriggerType> action = triggerTypeValuesPersistenceAdapter.findTriggerTypeByUUID(actionUUID);
@@ -64,7 +74,7 @@ public class TriggerService {
 
 	public TriggerExecutionAttributeConfiguration createTriggerAttributeConfiguration(Trigger trigger,
 			CreateTriggerCommand command) {
-		CompletableFuture<Attribute> attributeFuture = attributeService.findAttribute(command.getAttributeUUID());
+		CompletableFuture<Attribute> attributeFuture = attributeService.findAttribute(command.getAttributeToCheckUUID());
 		try {
 			return attributeFuture.thenApply(v -> {
 				return TriggerExecutionAttributeConfiguration.createAttributeConfiguration(trigger, v,
@@ -96,15 +106,18 @@ public class TriggerService {
 	public Trigger createTrigger(CreateTriggerCommand command) {
 		CompletableFuture<Game> gameFuture = gameService.findGame(command.getGameUUID());
 		CompletableFuture<Action> actionFuture = actionService.findAction(command.getActionUUID());
+		CompletableFuture<Attribute> attributeFuture = this.findAttribute(command.getAttributeToIncrementUUID());
 		CompletableFuture<TriggerType> triggerTypeFuture = this.findTriggerType(command.getTriggerTypeUUID());
 		CompletableFuture<TriggerEffectType> triggerEffectFuture = this
 				.findTriggerEffectType(command.getTriggerEffectTypeUUID());
 
 		try {
-			return CompletableFuture.allOf(gameFuture, actionFuture, triggerTypeFuture, triggerEffectFuture)
+			return CompletableFuture
+					.allOf(gameFuture, actionFuture, triggerTypeFuture, triggerEffectFuture, attributeFuture)
 					.thenApply(v -> {
 						return Trigger.createTrigger(command.getName(), command.getDescription(), gameFuture.join(),
-								triggerTypeFuture.join(), triggerEffectFuture.join(), actionFuture.join());
+								triggerTypeFuture.join(), triggerEffectFuture.join(), actionFuture.join(),
+								attributeFuture.join());
 					}).get();
 		} catch (InterruptedException | ExecutionException e) {
 			throw new RuntimeException(

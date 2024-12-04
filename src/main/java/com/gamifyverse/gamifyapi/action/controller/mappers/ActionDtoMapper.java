@@ -26,7 +26,7 @@ public interface ActionDtoMapper {
 	@Mapping(source = "game.externalUUID", target = "gameUUID")
 	@Mapping(source = "actionType.externalUUID", target = "actionTypeUUID")
 	@Mapping(source = "scheduleType.externalUUID", target = "scheduleTypeUUID")
-	@Mapping(source = "attribute.externalUUID", target = "attributeUUID")
+//	@Mapping(source = "attribute.externalUUID", target = "attributeUUID")
 	public ActionDto toDto(Action action);
 
 	public List<ActionDto> toActionDtoList(List<Action> result);

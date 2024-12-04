@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.gamifyverse.gamifyapi.action.repository.entity.ActionEntity;
+import com.gamifyverse.gamifyapi.attributes.repository.entity.AttributeEntity;
 import com.gamifyverse.gamifyapi.game.repository.entity.GameEntity;
 
 import jakarta.persistence.Column;
@@ -39,7 +40,11 @@ public class TriggerEntity {
 
 	@JoinColumn(name = "action_id")
 	@ManyToOne
-	private ActionEntity attribute;
+	private ActionEntity action;
+	
+	@JoinColumn(name = "attribute_id")
+	@ManyToOne
+	private AttributeEntity attribute;
 
 	@JoinColumn(name = "trigger_type_id")
 	@ManyToOne
@@ -54,4 +59,5 @@ public class TriggerEntity {
 
 	@Column
 	private Boolean active;
+
 }

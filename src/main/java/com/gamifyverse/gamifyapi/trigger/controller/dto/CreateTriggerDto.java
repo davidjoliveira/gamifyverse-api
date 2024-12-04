@@ -25,7 +25,8 @@ public class CreateTriggerDto {
 	@NotNull
 	private UUID triggerTypeUUID;
 	private Integer executionTimes;
-	private UUID attributeUUID;
+	private UUID attributeToIncrementUUID;
+	private UUID attributeToCheckUUID;
 	private Double attributeValue;
 
 	private UUID triggerEffectTypeUUID;

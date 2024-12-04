@@ -16,14 +16,14 @@ import lombok.Data;
 @Data
 public class TriggerExecutionRateConfigurationEntity {
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "trigger_execution_rate_config_id_seq")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "gamifyverse.trigger_execution_rate_config_id_seq")
 	private Long id;
 
 	@JoinColumn(name = "trigger_id")
 	@OneToOne
 	private TriggerEntity trigger;
 
-	@JoinColumn(name = "trigger_id")
+	@JoinColumn(name = "trigger_rate_type_id")
 	@ManyToOne
 	private TriggerRateTypeEntity triggerRateType;
 

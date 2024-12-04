@@ -20,30 +20,30 @@ public class Action {
 	private ActionType actionType;
 	private ScheduleType scheduleType;
 	private String schedule;
-	private Attribute attribute;
+//	private Attribute attribute;
 	private LocalDateTime creationDate;
 	private Boolean active;
 
 	public static Action createNewAction(String name, String description, Long actionTypeId, Long scheduleTypeId,
-			String schedule, Long attributeId, Long gameId) {
+			String schedule, Long gameId) {
 		Game game = new Game(gameId, null, null, null, null);
 		ActionType actionType = new ActionType(actionTypeId, null, null, null);
-		Attribute attribute = new Attribute(attributeId, game, null, null, null, null, null);
+//		Attribute attribute = new Attribute(attributeId, game, null, null, null, null, null);
 		ScheduleType scheduleType = null;
 		if (scheduleTypeId != null) {
 			scheduleType = new ScheduleType(scheduleTypeId, null, null, null);
 		}
-		return createNewAction(name, description, actionType, scheduleType, schedule, attribute, game);
+		return createNewAction(name, description, actionType, scheduleType, schedule, game);
 	}
 
 	public static Action createNewAction(String name, String description, ActionType actionType,
-			ScheduleType scheduleType, String schedule, Attribute attribute, Game game) {
+			ScheduleType scheduleType, String schedule, Game game) {
 		if (actionType == null || actionType.getId() == null) {
 			throw new RuntimeException(String.format("You must inform a valid action type to create an action"));
 		}
-		if (attribute == null || attribute.getId() == null) {
-			throw new RuntimeException(String.format("You must inform a valid attribute to create an action"));
-		}
+//		if (attribute == null || attribute.getId() == null) {
+//			throw new RuntimeException(String.format("You must inform a valid attribute to create an action"));
+//		}
 		if (game == null || game.getId() == null) {
 			throw new RuntimeException(String.format("You must inform a valid game to create an action"));
 		}
@@ -62,7 +62,7 @@ public class Action {
 			scheduleType = null;
 		}
 		Action action = new Action(null, name, description, UUID.randomUUID(), game, actionType, scheduleType, schedule,
-				attribute, LocalDateTime.now(), true);
+				LocalDateTime.now(), true);
 		return action;
 	}
 

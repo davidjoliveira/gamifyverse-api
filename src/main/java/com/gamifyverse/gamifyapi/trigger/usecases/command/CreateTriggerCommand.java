@@ -14,7 +14,8 @@ public class CreateTriggerCommand {
 	private UUID actionUUID;
 	private UUID triggerTypeUUID;
 	private Integer executionTImes;
-	private UUID attributeUUID;
+	private UUID attributeToIncrementUUID;
+	private UUID attributeToCheckUUID;
 	private Double attributeValue;
 	private UUID triggerEffectTypeUUID;
 	private UUID triggerRateTypeUUID;
@@ -23,8 +24,8 @@ public class CreateTriggerCommand {
 
 	public static CreateTriggerCommand from(CreateTriggerDto dto) {
 		return new CreateTriggerCommand(dto.getName(), dto.getDescription(), dto.getGameUUID(), dto.getActionUUID(),
-				dto.getTriggerTypeUUID(), dto.getExecutionTimes(), dto.getAttributeUUID(), dto.getAttributeValue(),
-				dto.getTriggerEffectTypeUUID(), dto.getTriggerRateTypeUUID(), dto.getBaseRate(),
-				dto.getIncrementRate());
+				dto.getTriggerTypeUUID(), dto.getExecutionTimes(), dto.getAttributeToIncrementUUID(),
+				dto.getAttributeToCheckUUID(), dto.getAttributeValue(), dto.getTriggerEffectTypeUUID(),
+				dto.getTriggerRateTypeUUID(), dto.getBaseRate(), dto.getIncrementRate());
 	}
 }

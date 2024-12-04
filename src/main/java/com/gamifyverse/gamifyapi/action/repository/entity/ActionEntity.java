@@ -3,7 +3,6 @@ package com.gamifyverse.gamifyapi.action.repository.entity;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import com.gamifyverse.gamifyapi.attributes.repository.entity.AttributeEntity;
 import com.gamifyverse.gamifyapi.game.repository.entity.GameEntity;
 
 import jakarta.persistence.Column;
@@ -37,9 +36,9 @@ public class ActionEntity {
 	@JoinColumn(name = "game_id")
 	private GameEntity game;
 
-	@JoinColumn(name = "attribute_id")
-	@ManyToOne
-	private AttributeEntity attribute;
+//	@JoinColumn(name = "attribute_id")
+//	@ManyToOne
+//	private AttributeEntity attribute;
 
 	@JoinColumn(name = "action_type_id")
 	@ManyToOne

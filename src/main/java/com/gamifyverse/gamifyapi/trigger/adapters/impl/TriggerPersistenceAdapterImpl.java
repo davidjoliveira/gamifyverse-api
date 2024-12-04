@@ -3,6 +3,7 @@ package com.gamifyverse.gamifyapi.trigger.adapters.impl;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,12 +11,14 @@ import org.springframework.stereotype.Component;
 import com.gamifyverse.gamifyapi.trigger.adapters.TriggerPersistenceAdapter;
 import com.gamifyverse.gamifyapi.trigger.adapters.TriggerTypeValuesPersistenceAdapter;
 import com.gamifyverse.gamifyapi.trigger.model.Trigger;
+import com.gamifyverse.gamifyapi.trigger.model.TriggerCalculationAssociation;
 import com.gamifyverse.gamifyapi.trigger.model.TriggerEffectType;
 import com.gamifyverse.gamifyapi.trigger.model.TriggerExecutionAttributeConfiguration;
 import com.gamifyverse.gamifyapi.trigger.model.TriggerExecutionConfiguration;
 import com.gamifyverse.gamifyapi.trigger.model.TriggerExecutionRateConfiguration;
 import com.gamifyverse.gamifyapi.trigger.model.TriggerRateType;
 import com.gamifyverse.gamifyapi.trigger.model.TriggerType;
+import com.gamifyverse.gamifyapi.trigger.repository.TriggerCalculationRepository;
 import com.gamifyverse.gamifyapi.trigger.repository.TriggerEffectTypeRepository;
 import com.gamifyverse.gamifyapi.trigger.repository.TriggerExecutionAttributeConfigurationRepository;
 import com.gamifyverse.gamifyapi.trigger.repository.TriggerExecutionConfigurationRepository;
@@ -23,6 +26,7 @@ import com.gamifyverse.gamifyapi.trigger.repository.TriggerExecutionRateConfigur
 import com.gamifyverse.gamifyapi.trigger.repository.TriggerRateTypeRepository;
 import com.gamifyverse.gamifyapi.trigger.repository.TriggerRepository;
 import com.gamifyverse.gamifyapi.trigger.repository.TriggerTypeRepository;
+import com.gamifyverse.gamifyapi.trigger.repository.entity.TriggerCalculationAssociationEntity;
 import com.gamifyverse.gamifyapi.trigger.repository.entity.TriggerEffectTypeEntity;
 import com.gamifyverse.gamifyapi.trigger.repository.entity.TriggerEntity;
 import com.gamifyverse.gamifyapi.trigger.repository.entity.TriggerExecutionAttributeConfigurationEntity;
@@ -55,7 +59,10 @@ public class TriggerPersistenceAdapterImpl implements TriggerTypeValuesPersisten
 
 	@Autowired
 	private TriggerExecutionRateConfigurationRepository executionRateConfiguration;
-	
+
+	@Autowired
+	private TriggerCalculationRepository triggerCalculationRepository;
+
 	@Autowired
 	private TriggerEntityMapper triggerMpper;
 
@@ -117,6 +124,32 @@ public class TriggerPersistenceAdapterImpl implements TriggerTypeValuesPersisten
 	public TriggerExecutionRateConfiguration persistConfiguration(TriggerExecutionRateConfiguration config) {
 		TriggerExecutionRateConfigurationEntity entity = triggerMpper.toEntity(config);
 		return triggerMpper.toDomain(executionRateConfiguration.save(entity));
+	}
+
+	@Override
+	public List<Trigger> getTriggersByGameUUID(UUID gameUUID) {
+		return triggerRepository.findByGameExternalUUIDAndActive(gameUUID, true).stream().map(triggerMpper::toDomain)
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public Optional<Trigger> getTriggerByExternalUUID(UUID triggerUUID) {
+		return triggerRepository.findByExternalUUID(triggerUUID).map(triggerMpper::toDomain);
+	}
+
+	@Override
+	public List<TriggerCalculationAssociation> getTriggerCalculationAssociationsByTriggerUUID(UUID triggerUUID) {
+		return triggerCalculationRepository.findByTriggerExternalUUID(triggerUUID).stream().map(triggerMpper::toDomain)
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<TriggerCalculationAssociation> upsertTriggerCalculationAssociations(
+			List<TriggerCalculationAssociation> currentAssociations) {
+		List<TriggerCalculationAssociationEntity> entity = currentAssociations.stream().map(triggerMpper::toEntity)
+				.collect(Collectors.toList());
+		return triggerCalculationRepository.saveAll(entity).stream().map(triggerMpper::toDomain)
+				.collect(Collectors.toList());
 	}
 
 }

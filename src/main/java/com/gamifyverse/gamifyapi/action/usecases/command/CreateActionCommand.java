@@ -10,14 +10,14 @@ import lombok.Value;
 public class CreateActionCommand {
 	private String name;
 	private String description;
-	private UUID attributeUUID;
+//	private UUID attributeUUID;
 	private UUID actionTypeUUID;
 	private UUID scheduleTypeUUID;
 	private String schedule;
 	private UUID gameUUID;
 
 	public static CreateActionCommand from(CreateActionDto dto) {
-		return new CreateActionCommand(dto.getName(), dto.getDescription(), dto.getAttributeUUID(),
+		return new CreateActionCommand(dto.getName(), dto.getDescription(),
 				dto.getActionTypeUUID(), dto.getScheduleTypeUUID(), dto.getSchedule(), dto.getGameUUID());
 	}
 }
